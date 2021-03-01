@@ -20,17 +20,20 @@ export default () => {
 
     const { id } = useParams();
     let courseId = id.split(":")[1];
-    useEffect(async () => {
-        try {
+    useEffect(() => {
+        async function fetchData() {
+            try {
 
-            const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${courseId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
-            if (res.data.blog != undefined) {
-                setBlog(res.data.blog)
+                const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${courseId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+                if (res.data.blog != undefined) {
+                    setBlog(res.data.blog)
+                }
+            }
+            catch (e) {
+                console.log(e);
             }
         }
-        catch (e) {
-            console.log(e);
-        }
+        fetchData();
 
     }, [])
 
