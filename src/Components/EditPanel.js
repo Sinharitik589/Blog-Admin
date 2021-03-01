@@ -5,12 +5,13 @@ import React from 'react'
 function saveValue() {
     const { subheadingTitle, subheadingUrl, subheadingDescription, keyFeatures, pros, cons, amazon, flipkart, subheadingEditMode } = this.state;
     const object = { title: subheadingTitle, url: subheadingUrl, content: subheadingDescription, key_feature: keyFeatures, pros, cons, flipkart, amazon };
+    var subheadings = [];
     if (subheadingEditMode >= 0) {
-        var subheadings = this.state.subheadings;
+        subheadings = this.state.subheadings;
         subheadings[subheadingEditMode] = object;
     }
     else
-        var subheadings = [...this.state.subheadings, object];
+        subheadings = [...this.state.subheadings, object];
     this.setState({ subheadings })
     resetValue.bind(this)();
 

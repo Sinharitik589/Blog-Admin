@@ -4,13 +4,13 @@ import React from 'react'
 function saveValue() {
     const { question, answer, questionEditMode } = this.state;
     let object = { question, answer };
-
+    var qusetions = [];
     if (questionEditMode >= 0) {
-        var questions = this.state.questions;
+        questions = this.state.questions;
         questions[questionEditMode] = object;
     }
     else
-        var questions = [...this.state.questions, object];
+        questions = [...this.state.questions, object];
     this.setState({ questions });
     resetValue.bind(this)();
 }
