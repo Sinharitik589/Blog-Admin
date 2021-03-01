@@ -38,8 +38,7 @@ class Blogs extends Component {
         let array = [];
         const { blogs } = this.props;
         if (blogs.length > 0) {
-            array = blogs.reverse().map((val, index) => {
-                console.log(blogs.length - index - 1)
+            array = blogs.map((val, index) => {
                 return (<Col lg={4} md={6}>
                     <Container className="card">
                         <img src={val.imageUrl} />
@@ -48,7 +47,7 @@ class Blogs extends Component {
 
                             <Row className="justify-content-between">
                                 <button onClick={() => { this.props.history.push(`/blog:${val._id}`) }} style={{ backgroundColor: "#006200" }}>View</button>
-                                <button onClick={() => { this.props.history.push(`/edit:${blogs.length - index - 1}`) }} style={{ backgroundColor: "#b17200" }}>Edit</button>
+                                <button onClick={() => { this.props.history.push(`/edit:${index}`) }} style={{ backgroundColor: "#b17200" }}>Edit</button>
                                 <button onClick={() => { this.setState({ modal: true, modalHeading: val.heading, modalId: val._id }) }} style={{ backgroundColor: "#9d0000" }}>Delete</button>
                             </Row>
                         </div>

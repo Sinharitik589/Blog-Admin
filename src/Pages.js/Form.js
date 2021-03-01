@@ -110,12 +110,16 @@ class Form extends Component {
     renderUrls() {
         let array = [];
         if (this.state.url.length > 0) {
-            array = this.state.url.map(val => {
+            array = this.state.url.map((val, index) => {
                 return (
                     <div className="application-tag-container"  >
                         <div class="application-tags" style={{ backgroundColor: "#dfe9fb" }}>
                             <a href={val.url} >{val.keyword}</a>
-                            <span style={{ marginLeft: 4, cursor: "pointer", color: "blue" }}    >
+                            <span onClick={() => {
+                                var urls = this.state.url;
+                                urls.splice(index, 1);
+                                this.setState({ urls });
+                            }} style={{ marginLeft: 4, cursor: "pointer", color: "blue" }}    >
                                 &times;
                              </span>
                         </div>
@@ -139,7 +143,7 @@ class Form extends Component {
                 array.push(object);
 
             });
-            this.setState({ urlToggle: false, url: array });
+            this.setState({ urlToggle: false, url: array, urlValue: "" });
         }
 
     }
