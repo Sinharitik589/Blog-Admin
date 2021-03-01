@@ -4,7 +4,7 @@ import React from 'react'
 function saveValue() {
     const { question, answer, questionEditMode } = this.state;
     let object = { question, answer };
-    var qusetions = [];
+    var questions = [];
     if (questionEditMode >= 0) {
         questions = this.state.questions;
         questions[questionEditMode] = object;
