@@ -11,12 +11,10 @@ const Navigation = () => {
 
     return (
         <Container style={{ marginTop: 100 }}>
-            <Switch>
-                <Route exact path="" component={Blogs} />
-                <Route path="add" component={Form} />
-                <Route path="edit:index" component={EditForm} />
-                <Route path="blog:id" component={Blog} />
-            </Switch>
+            <Route exact path="/" component={Blogs} />
+            <Route path="/add" component={Form} />
+            <Route path="/edit:index" component={EditForm} />
+            <Route path="/blog:id" component={Blog} />
         </Container>
     )
 }
