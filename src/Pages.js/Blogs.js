@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 import { fetchBlogs } from "../action"
 import axios from "axios";
-import { Container, Col, Row, Modal, Button } from 'react-bootstrap';
+import { Container, Col, Row, Modal, Button, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 class Blogs extends Component {
 
-
-    state = {
-        modal: false,
-        modalHeading: "",
-        modalId: ""
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false,
+            modalHeading: "",
+            modalId: "",
+            progress: false
+        }
     }
+
 
     closeModal() {
         this.setState({ modal: false })
@@ -20,17 +24,19 @@ class Blogs extends Component {
     async deleteBlog() {
 
         try {
-
+            this.setState({ progress: true })
             await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/delete?id=${this.state.modalId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             }
             );
-            this.setState({ modal: false });
+            this.setState({ modal: false, progress: false });
             this.props.fetchBlogs();
-
+            this.setState({ progress: false });
         }
         catch (e) {
-            console.log(e);
+            window.alert("Try Again");
+            this.setState({ progress: false });
+
         }
     }
 
@@ -71,8 +77,8 @@ class Blogs extends Component {
                             Close
                        </Button>
                         <Button variant="primary" onClick={this.deleteBlog.bind(this)}>
-                            Delete
-                       </Button>
+                            {(this.state.progress) ? <div><Spinner as={'span'} animation="border" variant="light" /><span> Deleting</span> </div> : "Delete"}
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             </Row>

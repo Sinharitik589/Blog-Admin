@@ -4,6 +4,7 @@ import { EditPanel } from "../Components/EditPanel";
 import { QuestionPanel } from "../Components/QuestionPanel";
 import { connect } from 'react-redux';
 import { fetchBlogs } from "../action"
+import { Spinner } from 'react-bootstrap';
 class Form extends Component {
 
     constructor(props) {
@@ -12,7 +13,7 @@ class Form extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1
+            questionEditMode: -1, progress: false
         }
 
     }
@@ -33,13 +34,15 @@ class Form extends Component {
             conclusion,
         }
         try {
+            this.setState({ progress: true })
             await axios.post("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/input", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
+            this.setState({ progress: false })
             this.props.fetchBlogs();
-
         }
         catch (e) {
-            console.log(e)
+            window.alert("Try Again");
+            this.setState({ progress: false })
         }
     }
 
@@ -269,7 +272,7 @@ class Form extends Component {
                         alignItems: "center"
                     }}>
                         <button type="button" onClick={this.saveBlog.bind(this)} className="btn btn-primary btn-lg">
-                            Submit
+                            {(this.state.progress) ? <div><Spinner as={'span'} animation="border" variant="light" /><span> Sumbitting</span> </div> : "Submit"}
                         </button>
                     </div>
                 </div>

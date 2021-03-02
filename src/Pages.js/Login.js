@@ -2,22 +2,24 @@ import React, { useState } from 'react'
 import { fetchAuth } from "../action"
 import axios from "axios"
 import { connect } from 'react-redux';
+import { Spinner } from 'react-bootstrap';
 
 const Login = ({ fetchAuth }) => {
 
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [progress, setProgress] = useState(false);
     const log = async () => {
         try {
-
+            setProgress(true);
             const res = await axios.post("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/login", { name: username, password });
             localStorage.setItem("token", res.data);
+
             fetchAuth(true);
         }
         catch (e) {
-            console.log(e)
+            setProgress(false);
         }
 
     }
@@ -34,7 +36,7 @@ const Login = ({ fetchAuth }) => {
                 </div>
 
                 <button onClick={log} type="submit" className="btn btn-primary">
-                    Login
+                    {(progress) ? <div><Spinner as={'span'} animation="border" variant="light" /><span>Logging</span> </div> : "Login"}
                 </button>
             </div>
 

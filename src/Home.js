@@ -10,10 +10,11 @@ import { Link } from 'react-router-dom';
 
 class Home extends Component {
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.props.fetchBlogs();
         if (localStorage.getItem("token") != null) {
             this.props.fetchAuth(true);
-            await this.props.fetchBlogs();
+
         }
         else
             this.props.fetchAuth(false);
@@ -34,7 +35,6 @@ class Home extends Component {
                 <Col md={2} className="side_nav">
                     <Link to="/"> <span > Blogs  </span></Link>
                     <Link to="/add"> <span > Add new</span></Link>
-                    <Link to="/featured"><span > Featured </span></Link>
                 </Col>
                 <Col md={10}>
                     <Container>
