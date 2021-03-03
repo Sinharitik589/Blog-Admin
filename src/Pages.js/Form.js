@@ -36,7 +36,7 @@ class Form extends Component {
         }
         try {
             this.setState({ progress: true })
-            await axios.post("http://localhost:9000/.netlify/functions/api/input", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.post("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/input", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
             this.props.fetchBlogs();

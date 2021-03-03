@@ -38,7 +38,7 @@ class EditForm extends Component {
         console.log({ blogs: object })
         try {
             this.setState({ progress: true })
-            await axios.put("http://localhost:9000/.netlify/functions/api/blog", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.put("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/blog", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
         }
@@ -62,7 +62,7 @@ class EditForm extends Component {
             try {
                 console.log("making request")
 
-                const res = await axios.get(`http://localhost:9000/.netlify/functions/api/admin/blog?id=${id}`);
+                const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${id}`);
 
                 if (res.data.blog != undefined) {
                     const {
