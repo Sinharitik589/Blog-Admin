@@ -10,3 +10,11 @@ export const fetchBlogs = () => async (dispatch) => {
         payload: res.data.arr
     })
 }
+
+export const fetchFeature = () => async (dispatch) => {
+    const res = await axios.get("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/featured");
+    dispatch({
+        type: "fetch_blogs",
+        payload: res.data.featured
+    })
+}

@@ -13,13 +13,13 @@ class Form extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1, progress: false
+            questionEditMode: -1, progress: false, name: ""
         }
 
     }
 
     async saveBlog() {
-        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading } = this.state;
+        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading, name } = this.state;
 
         const object = {
             category,
@@ -32,10 +32,11 @@ class Form extends Component {
             questions,
             urls: url,
             conclusion,
+            name
         }
         try {
             this.setState({ progress: true })
-            await axios.post("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/input", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.post("http://localhost:9000/.netlify/functions/api/input", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
             this.props.fetchBlogs();
@@ -151,7 +152,7 @@ class Form extends Component {
 
     }
     render() {
-        const { heading, category, author, image, description, meta, conclusion, urlValue, urlToggle } = this.state;
+        const { heading, category, author, image, description, meta, conclusion, urlValue, urlToggle, name } = this.state;
         return (
             <div >
                 <div className="form-group">
@@ -166,9 +167,14 @@ class Form extends Component {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label for="heading_input">Heading</label>
-                    <input value={heading} onChange={(e) => { this.setState({ heading: e.target.value }) }} className="form-control" id="heading_input" placeholder="name@example.com" />
+                    <label >Page Name</label>
+                    <input value={name} onChange={(e) => { this.setState({ name: e.target.value }) }} className="form-control" placeholder="name@example.com" />
                 </div>
+                <div className="form-group">
+                    <label >Heading</label>
+                    <input value={heading} onChange={(e) => { this.setState({ heading: e.target.value }) }} className="form-control" placeholder="name@example.com" />
+                </div>
+
 
                 <div className="form-group">
                     <label for="author">Author Name</label>

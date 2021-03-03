@@ -13,13 +13,13 @@ class EditForm extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1, blogId: null, progress: false
+            questionEditMode: -1, blogId: null, progress: false, name: ""
         }
 
     }
 
     async saveBlog() {
-        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading } = this.state;
+        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading, name } = this.state;
 
         const object = {
             id: this.state.blogId,
@@ -33,11 +33,12 @@ class EditForm extends Component {
             questions,
             urls: url,
             conclusion,
+            name
         }
         console.log({ blogs: object })
         try {
             this.setState({ progress: true })
-            await axios.put("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/blog", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.put("http://localhost:9000/.netlify/functions/api/blog", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
         }
@@ -61,7 +62,7 @@ class EditForm extends Component {
             try {
                 console.log("making request")
 
-                const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${id}`);
+                const res = await axios.get(`http://localhost:9000/.netlify/functions/api/admin/blog?id=${id}`);
 
                 if (res.data.blog != undefined) {
                     const {
@@ -75,8 +76,9 @@ class EditForm extends Component {
                         questions,
                         urls,
                         conclusion,
+                        name
                     } = res.data.blog;
-                    this.setState({ heading, category, subheadings: subheading, questions, url: urls, conclusion, description, meta: meta_description, author: username, image: imageUrl })
+                    this.setState({ heading, category, subheadings: subheading, questions, url: urls, conclusion, description, meta: meta_description, author: username, image: imageUrl, name })
                 }
             }
             catch (e) {
@@ -195,7 +197,7 @@ class EditForm extends Component {
 
     }
     render() {
-        const { heading, category, author, image, description, meta, conclusion, urlValue, urlToggle } = this.state;
+        const { heading, category, author, image, description, meta, conclusion, urlValue, urlToggle, name } = this.state;
         return (
             <div style={{ marginTop: 100 }}>
                 <div className="form-group">
@@ -210,8 +212,12 @@ class EditForm extends Component {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label for="heading_input">Heading</label>
-                    <input value={heading} disabled onChange={(e) => { this.setState({ heading: e.target.value }) }} className="form-control" id="heading_input" placeholder="name@example.com" />
+                    <label >Page name</label>
+                    <input value={name} disabled onChange={(e) => { this.setState({ name: e.target.value }) }} className="form-control" placeholder="name@example.com" />
+                </div>
+                <div className="form-group">
+                    <label >Heading</label>
+                    <input value={heading} onChange={(e) => { this.setState({ heading: e.target.value }) }} className="form-control" placeholder="name@example.com" />
                 </div>
 
                 <div className="form-group">
