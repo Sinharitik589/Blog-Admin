@@ -37,9 +37,7 @@ class Home extends Component {
                     <Link to="/add"> <span > Add new</span></Link>
                 </Col>
                 <Col md={10}>
-                    <Container>
-                        <Navigation />
-                    </Container>
+                    <Navigation />
                 </Col>
             </Row>)
         }

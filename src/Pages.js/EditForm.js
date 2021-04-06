@@ -18,6 +18,24 @@ class EditForm extends Component {
 
     }
 
+    changeOrder(type, index) {
+        let temp;
+        let subheadings = this.state.subheadings;
+        if (type == "up") {
+            temp = subheadings[index];
+            subheadings[index] = subheadings[index - 1];
+            subheadings[index - 1] = temp;
+            this.setState({ subheadings });
+
+        }
+        else {
+            temp = subheadings[index];
+            subheadings[index] = subheadings[index + 1];
+            subheadings[index + 1] = temp;
+            this.setState({ subheadings });
+        }
+    }
+
     async saveBlog() {
         const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading, name } = this.state;
 
@@ -98,19 +116,41 @@ class EditForm extends Component {
         if (this.state.subheadings != undefined) {
             if (this.state.subheadings.length > 0) {
                 array = this.state.subheadings.map((val, index) => {
-                    return (<div className="subheading-tab-container">
-                        <h5 >{val.title}</h5>
-                        <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-                            <button
-                                onClick={(e) => {
-                                    var subheadings = this.state.subheadings;
-                                    subheadings.splice(index, 1);
-                                    this.setState({ subheadings });
-                                }}
-                                className="btn btn-primary btn-sm" >delete</button>
-                            <button
-                                onClick={this.subheadingEdit.bind(this, index)}
-                                className="btn btn-secondary btn-sm">edit</button>
+                    return (<div className="row no-gutters align-items-center">
+                        <div className=" col-10 subheading-tab-container">
+                            <h5 >{val.title}</h5>
+                            <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+                                <button
+                                    onClick={(e) => {
+                                        var subheadings = this.state.subheadings;
+                                        subheadings.splice(index, 1);
+                                        this.setState({ subheadings });
+                                    }}
+                                    className="btn btn-primary btn-sm" >delete</button>
+                                <button
+                                    onClick={this.subheadingEdit.bind(this, index)}
+                                    className="btn btn-secondary btn-sm">edit</button>
+                            </div>
+                        </div>
+                        <div className="col-2">
+                            {(index != this.state.subheadings.length - 1) ? <div onClick={this.changeOrder.bind(this, "down", index)} className="tab-move-icon-container" style={{ display: "inline" }} >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <g id="keyboard_arrow_down_24px">
+                                        <path id="icon/hardware/keyboard_arrow_down_24px" d="M8.12499 8.99999L12.005 12.88L15.885 8.99999C16.275 8.60999 16.905 8.60999 17.295 8.99999C17.685 9.38999 17.685
+                                         10.02 17.295 10.41L12.705 15C12.315 15.39 11.685 15.39 11.295 15L6.70499 10.41C6.51774 10.2232 6.41251 9.96951 6.41251 9.70499C6.41251 9.44047 6.51774 9.18682 6.70499
+                                          8.99999C7.09499 8.61999 7.73499 8.60999 8.12499 8.99999Z" fill="black" fill-opacity="0.54" />
+                                    </g>
+                                </svg>
+                            </div> : ""}
+                            {(index != 0) ? <div onClick={this.changeOrder.bind(this, "up", index)} className="tab-move-icon-container" style={{ display: "inline" }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <g id="keyboard_arrow_up_24px">
+                                        <path id="icon/hardware/keyboard_arrow_up_24px" d="M8.12498 15L12.005 11.12L15.885 15C16.275 15.39 16.905 15.39 17.295 15C17.685 14.61 17.685 13.98 17.295 13.59L12.705 
+                                        9.00001C12.5181 8.81275 12.2645 8.70752 12 8.70752C11.7355 8.70752 11.4818 8.81275 11.295 9.00001L6.70498 13.59C6.31498 13.98 6.31498 14.61 6.70498 15C7.09498 15.38 7.73498
+                                         15.39 8.12498 15Z" fill="black" fill-opacity="0.54" />
+                                    </g>
+                                </svg>
+                            </div> : ""}
                         </div>
                     </div>)
                 })
@@ -245,7 +285,7 @@ class EditForm extends Component {
                         <div className="col-md-3 col-sm-12">
                             <h3 style={{ color: "#464646", fontWeight: "bold" }} className="label_heading">
                                 Subheading
-          </h3>
+                            </h3>
                         </div>
                         <div className="col-md-7 col-sm-12" id="subheading_tabs">
                             {this.renderSubheading()}
@@ -253,7 +293,7 @@ class EditForm extends Component {
                         <div className="col-md-2 col-sm-12 label-button">
                             <button onClick={() => { this.setState({ subheadingToggle: true }) }} className="application-button-container">
                                 + Add
-          </button>
+                              </button>
                         </div>
                         <div className="col-md-12 col-sm-12">
                             {EditPanel.bind(this)()}
@@ -266,7 +306,7 @@ class EditForm extends Component {
                         <div className="col-md-3 col-sm-12">
                             <h3 style={{ color: "#464646", fontWeight: "bold" }} className="label_heading">
                                 Questions
-          </h3>
+                            </h3>
                         </div>
                         <div className="col-md-7 col-sm-12" id="subheading_tabs">
                             {this.renderQuestions()}
@@ -287,7 +327,7 @@ class EditForm extends Component {
                         <div className="col-md-1 col-sm-12">
                             <h3 style={{ color: " #464646", fontWeight: "bold", textAlign: " center" }} >
                                 Urls
-          </h3>
+                            </h3>
                         </div>
                         <div className="col-md-9 col-sm-12">
                             <div className="skills" id="url_set">
