@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
-import { Route, Switch } from 'react-router'
+import { Route, Switch } from 'react-router-dom'
 import Blog from './Blog'
 import Blogs from './Blogs'
 import EditForm from './EditForm'

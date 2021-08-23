@@ -3,6 +3,23 @@
   padding: 0;
 }
 
+.read-more-tag {
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #4747ff;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+
 .side_nav {
   position: -webkit-sticky;
   position: sticky;

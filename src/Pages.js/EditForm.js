@@ -5,6 +5,11 @@ import { fetchBlogs } from "../action"
 import { QuestionPanel } from "../Components/QuestionPanel";
 import { connect } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
+import { EditorState, ContentState } from "draft-js"
+import htmlToDraft from 'html-to-draftjs';
+
+
+let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000";
 class EditForm extends Component {
 
     constructor(props) {
@@ -13,7 +18,13 @@ class EditForm extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1, blogId: null, progress: false, name: ""
+            questionEditMode: -1, blogId: null, progress: false, name: "", blogs: [], more: [], editorState: EditorState.createEmpty()
+        }
+        if (process.env.NODE_ENV == "production") {
+            this.state.endpoint = "https://zen-newton-5723fe.netlify.app"
+        }
+        else {
+            this.state.endpoint = "http://localhost:9000"
         }
 
     }
@@ -37,7 +48,7 @@ class EditForm extends Component {
     }
 
     async saveBlog() {
-        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading, name } = this.state;
+        const { subheadings, questions, category, author, image, description, meta, url, conclusion, heading, name, more } = this.state;
 
         const object = {
             id: this.state.blogId,
@@ -51,12 +62,13 @@ class EditForm extends Component {
             questions,
             urls: url,
             conclusion,
-            name
+            name,
+            more
         }
         console.log({ blogs: object })
         try {
             this.setState({ progress: true })
-            await axios.put("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/blog", object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.put(`${this.state.endpoint}/.netlify/functions/api/blog`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
         }
@@ -80,7 +92,8 @@ class EditForm extends Component {
             try {
                 console.log("making request")
 
-                const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${id}`);
+                const res = await axios.get(`${this.state.endpoint}/.netlify/functions/api/admin/blog?id=${id}`);
+                console.log(res);
 
                 if (res.data.blog != undefined) {
                     const {
@@ -94,9 +107,27 @@ class EditForm extends Component {
                         questions,
                         urls,
                         conclusion,
+                        more,
                         name
                     } = res.data.blog;
-                    this.setState({ heading, category, subheadings: subheading, questions, url: urls, conclusion, description, meta: meta_description, author: username, image: imageUrl, name })
+                    let array = [];
+                    for (let x in subheading) {
+                        let val = subheading[x];
+                        const blocksFromHtml = htmlToDraft(val.content);
+                        const { contentBlocks, entityMap } = blocksFromHtml;
+                        const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+                        const editorState = EditorState.createWithContent(contentState);
+                        val.content = editorState;
+                        array.push(val);
+                    }
+                    this.setState({
+                        heading, category, subheadings: array, questions, more,
+                        url: urls, conclusion, description, meta: meta_description, author: username, image: imageUrl, name
+                    })
+                };
+                const names = await axios.get(`${this.state.endpoint}/.netlify/functions/api/admin/blog/name`);
+                if (names.data.blog != undefined) {
+                    this.setState({ blogs: names.data.blog });
                 }
             }
             catch (e) {
@@ -108,8 +139,15 @@ class EditForm extends Component {
     subheadingEdit(index) {
         const { subheadings } = this.state;
         const { title, url, content, key_feature, amazon, flipkart, pros, cons } = subheadings[index];
-        console.log(title, index)
-        this.setState({ subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, subheadingDescription: content, keyFeatures: key_feature, amazon, flipkart, pros, cons })
+        let ncontent = content;
+        if (content._immutable === undefined) {
+            const blocksFromHtml = htmlToDraft(content);
+            const { contentBlocks, entityMap } = blocksFromHtml;
+            const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+            const editorState = EditorState.createWithContent(contentState);
+            ncontent = editorState;
+        }
+        this.setState({ subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, editorState: ncontent, subheadingDescription: ncontent, keyFeatures: key_feature, amazon, flipkart, pros, cons })
     }
     renderSubheading() {
         let array = [];
@@ -236,6 +274,7 @@ class EditForm extends Component {
         }
 
     }
+
     render() {
         const { heading, category, author, image, description, meta, conclusion, urlValue, urlToggle, name } = this.state;
         return (
@@ -278,6 +317,30 @@ class EditForm extends Component {
                 <div className="form-group">
                     <label for="meta_description_input">Meta Description</label>
                     <textarea value={meta} onChange={(e) => { this.setState({ meta: e.target.value }) }} id="meta_description_input" className="form-control" rows="4"></textarea>
+                </div>
+                <div className="form-group">
+                    <label for="category" >Read More</label><br />
+                    {
+                        this.state.blogs.map(val => {
+                            let index = this.state.more.findIndex(value => value == val._id);
+                            let backGround = (index >= 0) ? " rgb(0, 0, 58)" : "rgb(71, 71, 255)";
+                            if (val.name != undefined && val.name != "" && val.name != name) {
+                                return (<div className="read-more-tag" onClick={() => {
+                                    let more = this.state.more;
+                                    if (index >= 0) {
+                                        more.splice(index, 1);
+                                    }
+                                    else {
+                                        more.push(val._id);
+                                    };
+                                    this.setState({ more });
+                                }} style={{ backgroundColor: `${backGround}` }} >
+                                    {val.name.slice(0, 15)}
+                                </div>)
+                            }
+                        }
+                        )
+                    }
                 </div>
                 <hr />
                 <div className="form-group">

@@ -6,6 +6,7 @@ import { Spinner } from 'react-bootstrap';
 
 const Login = ({ fetchAuth }) => {
 
+    let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000"
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -13,7 +14,7 @@ const Login = ({ fetchAuth }) => {
     const log = async () => {
         try {
             setProgress(true);
-            const res = await axios.post("https://zen-newton-5723fe.netlify.app/.netlify/functions/api/login", { name: username, password });
+            const res = await axios.post(`${url}/.netlify/functions/api/login`, { name: username, password });
             localStorage.setItem("token", res.data);
 
             fetchAuth(true);

@@ -3,6 +3,19 @@
   padding: 0;
 }
 
+ .read-more-tag{
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(71, 71, 255);
+    width: max-content;
+    height: fit-content;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
 .side_nav {
   position: sticky;
   top: 20px;

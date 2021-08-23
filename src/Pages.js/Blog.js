@@ -13,9 +13,12 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { Row, Col, Container, Dropdown } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
 export default () => {
+
+
+    let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000"
     const [blog, setBlog] = useState(null);
 
     const { id } = useParams();
@@ -24,7 +27,7 @@ export default () => {
         async function fetchData() {
             try {
 
-                const res = await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/admin/blog?id=${courseId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+                const res = await axios.get(`${url}/.netlify/functions/api/admin/blog?id=${courseId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
                 if (res.data.blog != undefined) {
                     setBlog(res.data.blog)
                 }

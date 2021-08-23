@@ -1,4 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import "./EditComponent.css"
 
 
 
@@ -24,6 +29,7 @@ function resetValue() {
 
 }
 export function EditPanel() {
+
     if (this.state.subheadingToggle) {
         return (<div className="edit-panel" id="edit_panel">
             <div className="row">
@@ -37,11 +43,17 @@ export function EditPanel() {
                     <input value={this.state.subheadingUrl} onChange={(e) => { this.setState({ subheadingUrl: e.target.value }) }} className="form-control" id="subheading_url" />
                 </div>
             </div>
-            <div className="row">
-                <div className="col-md-12 col-sm-12">
-                    <label className="application-label">Description</label>
-                    <textarea value={this.state.subheadingDescription} onChange={(e) => { this.setState({ subheadingDescription: e.target.value }) }} id="subheading_description" className="form-control" rows="6"></textarea>
-                </div>
+            <div className="wrapper-class shadow-sm">
+
+                <Editor
+                    onEditorStateChange={(newState) => {
+                        this.setState({ editorState: newState })
+                        this.setState({ subheadingDescription: draftToHtml(convertToRaw(newState.getCurrentContent())) })
+                    }}
+                    editorState={this.state.editorState}
+                    editorClassName="editor-class"
+                    toolbarClassName="toolbar-class"
+                />
             </div>
             <div className="row">
                 <div className="col-md-12 col-sm-12">

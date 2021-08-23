@@ -4,6 +4,8 @@ import axios from "axios";
 import { Container, Col, Row, Modal, Button, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
+
+let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000"
 class Blogs extends Component {
 
     constructor(props) {
@@ -25,7 +27,7 @@ class Blogs extends Component {
 
         try {
             this.setState({ progress: true })
-            await axios.get(`https://zen-newton-5723fe.netlify.app/.netlify/functions/api/delete?id=${this.state.modalId}`, {
+            await axios.get(`${url}/.netlify/functions/api/delete?id=${this.state.modalId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             }
             );
