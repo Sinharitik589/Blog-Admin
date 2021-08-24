@@ -9,7 +9,7 @@ import { EditorState, ContentState } from "draft-js"
 import htmlToDraft from 'html-to-draftjs';
 
 
-let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000";
+let urlg = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000";
 class EditForm extends Component {
 
     constructor(props) {
@@ -68,7 +68,7 @@ class EditForm extends Component {
         console.log({ blogs: object })
         try {
             this.setState({ progress: true })
-            await axios.put(`${this.state.endpoint}/.netlify/functions/api/blog`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.put(`${urlg}/.netlify/functions/api/blog`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
         }

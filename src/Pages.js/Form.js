@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { fetchBlogs } from "../action"
 import { Spinner } from 'react-bootstrap';
 
-let url = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000"
+let urlg = (process.env.NODE_ENV == "production") ? "https://zen-newton-5723fe.netlify.app" : "http://localhost:9000"
 class Form extends Component {
 
     constructor(props) {
@@ -38,7 +38,7 @@ class Form extends Component {
         }
         try {
             this.setState({ progress: true })
-            await axios.post(`${url}/.netlify/functions/api/input`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+            await axios.post(`${urlg}/.netlify/functions/api/input`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
             this.setState({ progress: false })
             this.props.fetchBlogs();
