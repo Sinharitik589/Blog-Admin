@@ -49,6 +49,7 @@ export function EditPanel() {
                     onEditorStateChange={(newState) => {
                         this.setState({ editorState: newState })
                         this.setState({ subheadingDescription: draftToHtml(convertToRaw(newState.getCurrentContent())) })
+                        console.log(draftToHtml(convertToRaw(newState.getCurrentContent())), newState)
                     }}
                     editorState={this.state.editorState}
                     editorClassName="editor-class"

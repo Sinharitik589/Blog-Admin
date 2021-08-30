@@ -5,7 +5,8 @@ import { fetchBlogs } from "../action"
 import { QuestionPanel } from "../Components/QuestionPanel";
 import { connect } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
-import { EditorState, ContentState } from "draft-js"
+import { EditorState, ContentState, convertToRaw } from "draft-js"
+import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
 
@@ -65,8 +66,19 @@ class EditForm extends Component {
             name,
             more
         }
-        console.log({ blogs: object })
+        console.log({ subheadings })
+        let array = subheadings.map(val => {
+
+            let newVal = Object.assign({}, val);
+            const { title, url, content, key_feature, amazon, flipkart, pros, cons } = newVal;
+            let ncontent = content;
+            if (ncontent._immutable !== undefined) {
+                newVal.content = draftToHtml(convertToRaw(content.getCurrentContent()))
+            }
+            return newVal;
+        })
         try {
+            object.subheading = array;
             this.setState({ progress: true })
             await axios.put(`${urlg}/.netlify/functions/api/blog`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
@@ -113,7 +125,17 @@ class EditForm extends Component {
                     let array = [];
                     for (let x in subheading) {
                         let val = subheading[x];
-                        const blocksFromHtml = htmlToDraft(val.content);
+                        let blocksFromHtml;
+                        if (val.content._immutable !== undefined) {
+                            console.log(draftToHtml(val.content))
+                            let objd = val.content._immutable.currentContent.blockMap;
+                            let keys = Object.keys(objd);
+                            console.log(objd[keys[0]].text)
+                            blocksFromHtml = htmlToDraft(objd[keys[0]].text);
+                        }
+                        else {
+                            blocksFromHtml = htmlToDraft(val.content);
+                        }
                         const { contentBlocks, entityMap } = blocksFromHtml;
                         const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
                         const editorState = EditorState.createWithContent(contentState);
@@ -138,7 +160,8 @@ class EditForm extends Component {
     }
     subheadingEdit(index) {
         const { subheadings } = this.state;
-        const { title, url, content, key_feature, amazon, flipkart, pros, cons } = subheadings[index];
+        let nsubheadings = Object.assign({}, subheadings[index]);
+        const { title, url, content, key_feature, amazon, flipkart, pros, cons } = nsubheadings;
         let ncontent = content;
         if (content._immutable === undefined) {
             const blocksFromHtml = htmlToDraft(content);

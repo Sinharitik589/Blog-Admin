@@ -3,6 +3,8 @@ import axios from "axios"
 import { EditPanel } from "../Components/EditPanel";
 import { QuestionPanel } from "../Components/QuestionPanel";
 import { connect } from 'react-redux';
+import { EditorState, ContentState, convertToRaw } from "draft-js"
+import draftToHtml from 'draftjs-to-html';
 import { fetchBlogs } from "../action"
 import { Spinner } from 'react-bootstrap';
 
@@ -36,7 +38,19 @@ class Form extends Component {
             conclusion,
             name
         }
+        let array = subheadings.map(val => {
+
+            let newVal = Object.assign({}, val);
+            const { title, url, content, key_feature, amazon, flipkart, pros, cons } = newVal;
+            let ncontent = content;
+            if (ncontent._immutable !== undefined) {
+                newVal.content = draftToHtml(convertToRaw(content.getCurrentContent()))
+            }
+            return newVal;
+        })
         try {
+
+            object.subheading = array;
             this.setState({ progress: true })
             await axios.post(`${urlg}/.netlify/functions/api/input`, object, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
             window.alert("submitted");
