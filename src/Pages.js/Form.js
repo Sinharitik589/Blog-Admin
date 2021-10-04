@@ -17,7 +17,7 @@ class Form extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1, progress: false, name: ""
+            questionEditMode: -1, progress: false, name: "", youtubeVideo: ""
         }
 
     }
@@ -66,9 +66,11 @@ class Form extends Component {
 
     subheadingEdit(index) {
         const { subheadings } = this.state;
-        const { title, url, content, key_feature, amazon, flipkart, pros, cons } = subheadings[index];
-        console.log(title, index)
-        this.setState({ subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, subheadingDescription: content, keyFeatures: key_feature, amazon, flipkart, pros, cons })
+        const { title, url, content, key_feature, amazon, flipkart, pros, cons, youtubeVideo } = subheadings[index];
+        this.setState({
+            subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, subheadingDescription: content,
+            keyFeatures: key_feature, amazon, flipkart, pros, cons, youtubeVideo
+        })
     }
     renderSubheading() {
         let array = [];

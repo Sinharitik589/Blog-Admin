@@ -19,7 +19,7 @@ class EditForm extends Component {
         this.state = {
             subheadings: [], heading: "", category: "", author: "", image: "", description: "", meta: "", questions: [], url: [], conclusion: "", urlValue: "", urlToggle: false, subheadingToggle: false,
             questionToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", amazon: "", flipkart: "", pros: "", cons: "", question: "", answer: "", subheadingEditMode: -1,
-            questionEditMode: -1, blogId: null, progress: false, name: "", blogs: [], more: [], editorState: EditorState.createEmpty()
+            questionEditMode: -1, blogId: null, progress: false, name: "", blogs: [], more: [], editorState: EditorState.createEmpty(), youtubeVideo: ""
         }
         if (process.env.NODE_ENV == "production") {
             this.state.endpoint = "https://zen-newton-5723fe.netlify.app"
@@ -161,7 +161,7 @@ class EditForm extends Component {
     subheadingEdit(index) {
         const { subheadings } = this.state;
         let nsubheadings = Object.assign({}, subheadings[index]);
-        const { title, url, content, key_feature, amazon, flipkart, pros, cons } = nsubheadings;
+        const { title, url, content, key_feature, amazon, flipkart, pros, cons, youtubeVideo } = nsubheadings;
         let ncontent = content;
         if (content._immutable === undefined) {
             const blocksFromHtml = htmlToDraft(content);
@@ -170,7 +170,10 @@ class EditForm extends Component {
             const editorState = EditorState.createWithContent(contentState);
             ncontent = editorState;
         }
-        this.setState({ subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, editorState: ncontent, subheadingDescription: ncontent, keyFeatures: key_feature, amazon, flipkart, pros, cons })
+        this.setState({
+            subheadingToggle: true, subheadingEditMode: index, subheadingTitle: title, subheadingUrl: url, editorState: ncontent,
+            subheadingDescription: ncontent, keyFeatures: key_feature, amazon, flipkart, pros, cons, youtubeVideo
+        })
     }
     renderSubheading() {
         let array = [];

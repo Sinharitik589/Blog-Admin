@@ -8,8 +8,10 @@ import "./EditComponent.css"
 
 
 function saveValue() {
-    const { subheadingTitle, subheadingUrl, subheadingDescription, keyFeatures, pros, cons, amazon, flipkart, subheadingEditMode } = this.state;
-    const object = { title: subheadingTitle, url: subheadingUrl, content: subheadingDescription, key_feature: keyFeatures, pros, cons, flipkart, amazon };
+    alert("saved");
+    const { subheadingTitle, subheadingUrl, subheadingDescription, keyFeatures, pros, cons, amazon, flipkart, subheadingEditMode, youtubeVideo } = this.state;
+    const object = { title: subheadingTitle, url: subheadingUrl, content: subheadingDescription, key_feature: keyFeatures, pros, cons, flipkart, amazon, youtubeVideo };
+    console.log({ youtubeVideo });
     var subheadings = [];
     if (subheadingEditMode >= 0) {
         subheadings = this.state.subheadings;
@@ -25,7 +27,7 @@ function saveValue() {
 
 
 function resetValue() {
-    this.setState({ subheadingToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", pros: "", cons: "", amazon: "", flipkart: "", subheadingEditMode: -1 })
+    this.setState({ subheadingToggle: false, subheadingTitle: "", subheadingUrl: "", subheadingDescription: "", keyFeatures: "", pros: "", cons: "", amazon: "", flipkart: "", subheadingEditMode: -1, youtubeVideo: "" })
 
 }
 export function EditPanel() {
@@ -75,15 +77,14 @@ export function EditPanel() {
                 </div>
             </div>
             <div className="row">
-                <div className="col-md-6 col-sm-12">
-                    <label className="application-label">Flipkart Link</label>
-                    <input value={this.state.flipkart} onChange={(e) => { this.setState({ flipkart: e.target.value }) }} className="form-control" id="subheading_flipkart" />
+                <div className="col-md-12 col-sm-12">
+                    <label className="application-label">Youtube Link</label>
+                    <input value={this.state.youtubeVideo} onChange={(e) => {
+                        this.setState({ youtubeVideo: e.target.value })
+                        console.log(e.target.value)
+                    }} className="form-control" id="subheading_flipkart" />
                 </div>
 
-                <div className="col-md-6 col-sm-12">
-                    <label className="application-label">Amazon Link</label>
-                    <input value={this.state.amazon} className="form-control" onChange={(e) => { this.setState({ amazon: e.target.value }) }} id="subheading_amazon" />
-                </div>
             </div>
             <div style={{
                 display: "flex",
